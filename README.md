@@ -118,3 +118,4 @@ promptweaver/
 - Improved error handling and custom exception classes.
 - Test coverage.
 - Performance optimizations for large-scale usage.
+- Support for LLM App evaluation templates.
