@@ -1,0 +1,75 @@
+# ---
+name: Cooking Designer
+description: A prompt that helps creating a recipe based in a prompt.
+model:
+  model_name: gemini-1.5-pro-001
+  generation_config:
+    temperature: 0.3
+    response_mime_type: application/json
+    response_schema:
+      type: object
+      properties: {% if image_uri %}
+        image_content_description:
+          type: string {% endif %}
+        recipe_name:
+          type: string
+        difficulty_level:
+          type: string
+          "enum": [
+            "easy",
+            "moderate",
+            "professional"
+          ]
+        ingredient_list:
+          type: array
+          items: 
+            type: object
+            properties:
+                unit:
+                    type: string
+                    enum:
+                      - count
+                      - cup
+                      - tablespoon
+                      - teaspoon
+                      - kg
+                      - g
+                      - mg
+                amount:
+                  type: number
+                name:
+                  type: string
+            required:
+              - name
+        preparation_instructions:
+          type: array
+          items:
+            type: string
+      required:
+        - recipe_name
+        - difficulty_level
+        - ingredient_list
+        - preparation_instructions
+  system_instruction: |
+    You are a professional chef responsible for elaborating recipes for a {{ cousine }} restaurant.
+    Based on the user's prompt, you'll need to create a new cooking recipe in english.
+# ---
+variables:
+  cousine:
+    sample: brazilian
+  user_prompt:
+    sample: Check this image with all the ingredients that I have at home.
+  prioritize_weigth:
+    default: False
+  image_uri:
+    sample: data/images/feijoada-ingredients.jpeg
+# ---
+user:
+  {% if image_uri %}
+  - image: {{ image_uri }}{% endif %}
+  - text: |
+      {{ user_prompt }}
+      {% if prioritize_weigth %}
+      Please prioritize listing ingredient quantities in weight (mg, g, kg), instead of volumes.
+      {% endif %}
+  
