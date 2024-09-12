@@ -38,7 +38,9 @@ class GeminiMultimodalContentBuilder(ContentBuilder):
             for modality, uri in entry.items():
                 if entry.get(modality) == "None":
                     continue
-                elif modality == 'image':
+                if uri.startswith("https://storage.googleapis.com/"):
+                    uri = uri.replace("https://storage.googleapis.com/", "gs://")
+                if modality == 'image':
                     self._add_image(uri)
                 elif modality == 'video':
                     self._add_video(uri)

@@ -1,0 +1,31 @@
+# ---
+name: Multimodal Hello World
+description: A quickstart prompt showcasing how to analyse multimodal data inputs, all at once.
+model:
+  model_name: gemini-1.5-pro-001
+  generation_config:
+    temperature: 0.3
+    max_output_tokens: 1000
+  system_instruction: |
+    You are an AI model trained to answer questions based on multimodal data, such as: texts, images, videos, audios and documents.
+# ---
+variables:
+  image_uri:
+    sample: https://storage.googleapis.com/cloud-samples-data/generative-ai/image/a-man-and-a-dog.png
+    default: 
+  video_uri:
+    sample: https://storage.googleapis.com/cloud-samples-data/generative-ai/video/behind_the_scenes_pixel.mp4
+    default:
+# ---
+user:
+  - image: {{ image_uri }}
+  - video: {{ video_uri }}
+  - text: |
+      Look through each frame in the video carefully and answer the questions.
+      Only base your answers strictly on what information is available in the video attached.
+      Do not make up any information that is not part of the video and do not be too
+      verbose, be to the point.
+
+      Questions:
+      - When is the moment in the image happening in the video? Provide a timestamp.
+      - What is the context of the moment and what does the narrator say about it?

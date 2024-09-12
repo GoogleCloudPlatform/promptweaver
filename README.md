@@ -14,9 +14,13 @@
  limitations under the License.
  -->
 
-# promptweaver
+<div align="center">
+  <img src="https://services.google.com/fh/files/misc/promptweaver-logo.png">
+</div>
 
 promptweaver is a Python library that streamlines prompt development and management in Generative AI workflows. It decouples prompts from Python scripts, enhancing portability, maintainability, and scalability for developers working with multiple LLMs or complex prompting workflows.
+
+> This project is currently under active development and may undergo significant changes. We welcome your feedback and contributions!
 
 ## Features
 
@@ -45,6 +49,7 @@ name: Quickstart
 description: A hello worlds prompt.
 model:
   model_name: gemini-1.5-flash-001
+  max_output_tokens: 300
   generation_config:
     temperature: 0.0
   safety_settings:
@@ -119,3 +124,4 @@ promptweaver/
 - Test coverage.
 - Performance optimizations for large-scale usage.
 - Support for LLM App evaluation templates.
+- Support for function calling.

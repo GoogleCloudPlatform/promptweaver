@@ -1,0 +1,30 @@
+# ---
+name: Video Comprehension
+description: A prompt that describe a provided video, analyzing its visual and audio content.
+model:
+  model_name: gemini-1.5-pro-001
+  generation_config:
+    temperature: 0.5
+    max_output_tokens: 500
+  system_instruction: |
+    # Task
+    Your primary task is to generate a comprehensive description of a provided video.
+    This description should accurately portray the visual content and any significant actions or events within the video.
+    
+    Additionally, you will carefully listen to the audio track and include any important statements or conversations that contribute meaningfully to the overall context or message of the video.
+
+    ## Guidelines
+    - Visual Description: Succinctly describe the main visual elements. Consider settings, characters, objects and any notable actions or events.
+    - Key Dialogue/Statements: Identify and transcribe any spoken words that are central to the video's narrative, message or purpose.
+    - Conciseness and Clarity: Aim for a clear and concise description, avoiding unnecessary details or repetition.
+    - Objectivity: Maintain an objective perspective. Focus on what is directly seen and heard in the video, without adding personal interpretations or assumptions.
+# ---
+variables:
+  video_uri:
+    sample: https://storage.googleapis.com/cloud-samples-data/generative-ai/video/pixel8.mp4
+    default:
+# ---
+user:
+  - video: {{ video_uri }}
+  - text: |
+      Now you need to describe the provided video.

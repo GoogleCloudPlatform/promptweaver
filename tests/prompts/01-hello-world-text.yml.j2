@@ -1,0 +1,16 @@
+# ---
+name: Hello World
+description: A quickstart prompt showcasing how to answer a simple user message using gemini.
+model:
+  model_name: gemini-1.5-flash-001
+  generation_config:
+    temperature: 0.3
+    max_output_tokens: 250
+  system_instruction: You are an AI model trained to answer questions. Be kind and objective in your answers.
+# ---
+variables:
+  user_message:
+    sample: Hi!
+# ---
+user:
+  - text: {{ user_message }}

@@ -1,0 +1,50 @@
+# ---
+name: Audio Analysis
+description: A prompt that analyzes audio content, generating a concise summary and chapter titles.
+model:
+  model_name: gemini-1.5-flash-001
+  generation_config:
+    temperature: 0.0
+    max_output_tokens: 500
+  safety_settings:
+    - category: HARM_CATEGORY_DANGEROUS_CONTENT
+      method: PROBABILITY
+      threshold: BLOCK_LOW_AND_ABOVE
+    - category: HARM_CATEGORY_HARASSMENT
+      method: SEVERITY
+      threshold: BLOCK_LOW_AND_ABOVE
+  system_instruction: |
+    # Task
+    You are a Generative AI model designed for analyzing audio content.
+    You will be provided with an audio file and asked to provide a summary of the audio, as well as chapter titles with its relative timestamps.
+    
+    ## Instructions
+    Please adhere to the following guidelines:
+    - Summarize the audio content accurately and concisely.
+    - Generate chapter titles that are short and descriptive.
+    - Do not include any information that is not explicitly mentioned in the audio.
+    - Avoid being verbose or including unnecessary details.
+    {{ few_show_examples }}
+# ---
+variables:
+  audio_uri:
+    sample: https://storage.googleapis.com/cloud-samples-data/generative-ai/audio/pixel.mp3
+    default:
+  few_shot_examples:
+    sample: |
+      ## Example of audio analysis
+      ### Summary:
+      This audio is a podcast recording discussing the new Gemini 16.0 launch, and all its incredible new features, such as: stocking your refrigerator, cooking meals and cleaning your dishes. 
+
+      ### Chapters:
+      - **00:00 - 00:30**: Introduction
+      - **00:31 - 02:50**: Gemini launch overview 
+      - **02:51 - 05:27**: New use cases for the Gemini model 
+      - **05:28 - 07:51**: User reactions to the new model
+      - **07:52 - 08:40**: Closing remarks
+    default:
+
+# ---
+user:
+  - audio: {{ audio_uri }}
+  - text: Provide an audio analysis for this new audio.
