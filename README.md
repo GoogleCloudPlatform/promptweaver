@@ -42,29 +42,24 @@ pip install promptweaver
 
 First, you need to start by creating a `.yml.j2` promptweaver template.
 
-You will find template examples in our [promptweaver gallery](/tests/prompts/).
+You will find template examples in our [promptweaver gallery](/samples/).
 
 ```yaml
-name: Quickstart
-description: A hello worlds prompt.
+name: Hello World
+description: A quickstart prompt showcasing how to answer a simple user message using gemini.
 model:
   model_name: gemini-1.5-flash-001
-  max_output_tokens: 300
   generation_config:
-    temperature: 0.0
-  safety_settings:
-    - category: HARM_CATEGORY_DANGEROUS_CONTENT
-      method: PROBABILITY
-      threshold: BLOCK_LOW_AND_ABOVE
+    temperature: 0.3
+    max_output_tokens: 250
+  system_instruction: You are an AI model trained to answer questions. Be kind and objective in your answers.
+# ---
 variables:
-  character_name:
-    sample: Lorem Ipsum
-    default: Dolor Sit Amet
   user_message:
-    sample: Hello world!
+    sample: Hi!
+# ---
 user:
-  - text: |
-      Now you need to answer the following question from the user: {{ user_message }}
+  - text: {{ user_message }}
 ```
 
 Now you can call one of the supported LLM Clientes using the promptweaver template.
@@ -77,7 +72,7 @@ from promptweaver.clients.gemini.gemini_client import GeminiClient
 gemini_client = GeminiClient(project="your_project", location="your_location")
 
 # Load the prompt configuration
-example_prompt = PromptConfig.from_file_with_sample_values("tests/prompts/example.yml.j2")
+example_prompt = PromptConfig.from_file_with_sample_values("samples/example.yml.j2")
 
 # Generate content
 generate_content = gemini_client.generate_content(example_prompt)
