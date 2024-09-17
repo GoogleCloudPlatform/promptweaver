@@ -2,8 +2,8 @@ name: promptweaver build and publish
 
 on:
   push:
-    paths:
-      - 'promptweaver/**'
+    tags:
+      - 'python/*'
   workflow_dispatch:
 
 jobs:
@@ -25,4 +25,4 @@ jobs:
         run: pdm install
 
       - name: Publish package distributions to PyPI
-        run: pdm publish --repository https://test.pypi.org/legacy/
+        run: pdm publish --repository testpypi
