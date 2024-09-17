@@ -18,7 +18,7 @@
   <img src="https://services.google.com/fh/files/misc/promptweaver-logo.png">
 </div>
 
-promptweaver is a Python library that streamlines prompt development and management in Generative AI workflows. It decouples prompts from Python scripts, enhancing portability, maintainability, and scalability for developers working with multiple LLMs or complex prompting workflows.
+PromptWeaver is a Python library that streamlines prompt development and management in Generative AI workflows. It decouples prompts from Python scripts, enhancing portability, maintainability, and scalability for developers working with multiple LLMs or complex prompting workflows.
 
 > This project is currently under active development and may undergo significant changes. We welcome your feedback and contributions!
 
@@ -79,44 +79,6 @@ generate_content = gemini_client.generate_content(example_prompt)
 print(generate_content.text)
 ```
 
-
 ## Contributing
 
-We welcome contributions! Please read our contributing guide for details on how to get started.
-
-## Project Structure
-```
-promptweaver/
-├── promptweaver/
-│  ├── core/
-│  │  ├── prompt_template.py
-│  │  ├── base_llm_client.py
-│  │  └── content_builder.py
-│  ├── clients/
-│  │  ├── gemini/
-│  │  │  ├── gemini_client.py
-|  |  |  └── multimodal_content_builder.py
-│  ├── utils/
-│  │  ├── mime_utils.py
-│  │  └── string_utils.py
-├── tests/
-│  ├── prompts/
-│  │  └── example.yml.j2
-│  └── test_common.py
-├── data/
-│  ├── images/
-|  |  └── ...
-├── .gitignore
-├── example_call.py
-└── README.md
-└── requirements.txt
-```
-
-## Roadmap
-- Support for additional LLM clients.
-- Expanded multimodal input options to support local audios, videos, and documents.
-- Improved error handling and custom exception classes.
-- Test coverage.
-- Performance optimizations for large-scale usage.
-- Support for LLM App evaluation templates.
-- Support for function calling.
+We welcome contributions! Please read our contributing guide for details on how to get started. The project can be found on [GitHub](https://github.com/GoogleCloudPlatform/promptweaver).
