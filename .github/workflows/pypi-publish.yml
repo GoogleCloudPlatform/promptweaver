@@ -25,4 +25,4 @@ jobs:
         run: pdm install
 
       - name: Publish package distributions to PyPI
-        run: pdm publish
+        run: pdm publish --repository https://test.pypi.org/legacy/
