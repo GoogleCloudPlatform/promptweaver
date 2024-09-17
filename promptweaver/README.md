@@ -14,10 +14,6 @@
  limitations under the License.
  -->
 
-<div align="center">
-  <img src="https://services.google.com/fh/files/misc/promptweaver-logo.png">
-</div>
-
 PromptWeaver is a Python library that streamlines prompt development and management in Generative AI workflows. It decouples prompts from Python scripts, enhancing portability, maintainability, and scalability for developers working with multiple LLMs or complex prompting workflows.
 
 > This project is currently under active development and may undergo significant changes. We welcome your feedback and contributions!

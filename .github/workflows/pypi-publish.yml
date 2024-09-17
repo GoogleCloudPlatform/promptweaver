@@ -22,7 +22,9 @@ jobs:
           python-version: 3.11
 
       - name: Install dependencies
+        working-directory: ./promptweaver
         run: pdm install
 
       - name: Publish package distributions to PyPI
+        working-directory: ./promptweaver
         run: pdm publish --repository testpypi
