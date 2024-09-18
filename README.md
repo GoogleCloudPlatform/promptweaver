@@ -64,14 +64,14 @@ user:
   - text: {{ user_message }}
 ```
 
-Now you can call one of the supported LLM Clientes using the promptweaver template.
+Now you can call one of the supported LLM clients using the promptweaver template.
 
 ```python
 from promptweaver.core.prompt_template import PromptConfig
 from promptweaver.clients.gemini.gemini_client import GeminiClient
 
 # Initialize the Gemini client
-gemini_client = GeminiClient(project="your_project", location="your_location")
+gemini_client = GeminiClient(project="project_id", location="project_location")
 
 # Load the prompt configuration
 example_prompt = PromptConfig.from_file_with_sample_values("samples/example.yml.j2")
