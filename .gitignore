@@ -86,3 +86,4 @@ ipython_config.py
 *.pyc
 .DS_Store
 .pdm-python
+experiments/
