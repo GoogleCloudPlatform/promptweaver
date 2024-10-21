@@ -225,7 +225,7 @@ class PromptConfig:
         least one valid modality dictionary.
         """
         user_data = self.user
-        modalities = ['text', 'image', 'audio', 'video', 'document']
+        modalities = ['text', 'image', 'audio', 'video', 'document', 'multimodal']
         
         # Track whether any valid modality is provided
         provided_modalities = []
