@@ -49,4 +49,4 @@ def get_mime_type(file_uri: str) -> str:
         '.wav': 'audio/wav',
         '.pdf': 'application/pdf'
     }
-    return mime_types.get(extension, 'application/octet-stream')
+    return mime_types.get(extension)

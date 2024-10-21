@@ -19,6 +19,31 @@ import re
 import yaml
 from jinja2 import Template, UndefinedError, Environment, meta
 from promptweaver.utils.string_utils import remove_blank_spaces
+import pprint
+
+
+def format_schema(schema, indent=4, level=0):
+    """Formats a schema dictionary for improved readability."""
+    output = ""
+    indent_str = " " * indent * level
+    if isinstance(schema, dict):
+        output += "{\n"
+        for key, value in schema.items():
+            output += f"{indent_str} '{key}': "  
+            if isinstance(value, (dict, list)):
+                output += format_schema(value, indent, level + 1)
+            else:
+                output += f"{repr(value)},\n" 
+        output += f"{indent_str}}},\n" 
+    elif isinstance(schema, list):
+        output += "[\n"
+        for item in schema:
+            # Add indentation for each list item here:
+            output += f"{indent_str} " + format_schema(item, indent, level + 1) 
+        output += f"{indent_str}],\n"
+    else:
+        output += f"{repr(schema)},\n"
+    return output
 
 
 class YAMLParser:
@@ -151,21 +176,6 @@ class YAMLParser:
         return (parsed_yaml, merged_params)
 
 
-def extract_variables_from_template(template_str: str) -> Set[str]:
-    """
-    Extracts all the variables used in the Jinja2 template.
-
-    Args:
-        template_str (str): The Jinja2 template as a string.
-
-    Returns:
-        Set[str]: A set of all variable names used in the template.
-    """
-    env = Environment()
-    parsed_content = env.parse(template_str)
-    return meta.find_undeclared_variables(parsed_content)
-
-
 class PromptConfig:
     """
     Represents the configuration for the LLM prompt, loaded from a .yml.j2 file.
@@ -215,7 +225,7 @@ class PromptConfig:
         least one valid modality dictionary.
         """
         user_data = self.user
-        modalities = ['text', 'image', 'audio', 'video', 'document']
+        modalities = ['text', 'image', 'audio', 'video', 'document', 'multimodal']
         
         # Track whether any valid modality is provided
         provided_modalities = []
@@ -268,10 +278,11 @@ class PromptConfig:
         f"  name='{self.name}',\n"
         f"  description='{self.description}',\n"
         f"  model_name='{self.model_name}',\n"
-        f"  generation_config={self.generation_config},\n"
+        f"  generation_config={format_schema(self.generation_config, 2, 2)},\n"
         f"  safety_settings={self.safety_settings},\n"
+        f"  variables={format_schema(self.variables, 2, 2)},\n"
+        f"  provided_variables={format_schema(self.provided_variables, 2, 2)},\n"
         f"  system_instruction='{self.system_instruction}',\n"
-        f"  variables={self.variables},\n"
-        f"  provided_variables={self.provided_variables},\n"
+        f"  user={format_schema(self.user, 2, 2)}\n"
         ")\n"
     )

@@ -18,6 +18,7 @@ from promptweaver.core.content_builder import ContentBuilder
 from vertexai.generative_models import Part, Image
 from promptweaver.utils.mime_utils import get_mime_type
 from promptweaver.utils.string_utils import remove_blank_spaces
+import re
 
 class GeminiMultimodalContentBuilder(ContentBuilder):
     def __init__(self):
@@ -50,6 +51,10 @@ class GeminiMultimodalContentBuilder(ContentBuilder):
                     self._add_document(uri)
                 elif modality == 'text':
                     self.contents.append(remove_blank_spaces(uri))
+                elif modality == 'multimodal':
+                    self._add_multimodal(uri)
+                else:
+                    raise ValueError(f"Unsupported modality: {modality}")
         
         return self.contents
 
@@ -75,3 +80,16 @@ class GeminiMultimodalContentBuilder(ContentBuilder):
         mime_type = get_mime_type(document_uri)
         document_part = Part.from_uri(document_uri, mime_type=mime_type)
         self.contents.append(document_part)
+
+    def _add_multimodal(self, multimodal_text: str) -> None:
+        multimodal_text = multimodal_text.replace("gs://", "https://storage.googleapis.com/")
+        pattern = r"(https://storage\.googleapis\.com/[^\s]+)"
+        parts = re.split(pattern, multimodal_text)
+        for part in parts:
+            if part.strip():
+                if re.match(pattern, part):
+                    mime_type = get_mime_type(part)
+                    seg = Part.from_uri(part, mime_type=mime_type)
+                else:
+                    seg = remove_blank_spaces(part)
+                self.contents.append(seg)
