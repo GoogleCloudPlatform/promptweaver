@@ -19,7 +19,7 @@ from promptweaver.core.prompt_template import PromptConfig
 from promptweaver.clients.gemini.multimodal_content_builder import GeminiMultimodalContentBuilder
 from vertexai.generative_models import (
     GenerativeModel, GenerationConfig, SafetySetting,
-    HarmCategory, HarmBlockThreshold
+    HarmCategory, HarmBlockThreshold, GenerationResponse
 )
 
 import vertexai 
@@ -36,7 +36,7 @@ class GeminiClient(BaseLLMClient):
         """
         vertexai.init(project=project, location=location)
     
-    def generate_content(self, prompt_config: PromptConfig, verbose: bool = False) -> str:
+    def generate_content(self, prompt_config: PromptConfig, verbose: bool = False) -> GenerationResponse:
         """
         Generates content using Gemini API based on the provided PromptConfig.
 
