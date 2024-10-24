@@ -18,8 +18,7 @@ from typing import Dict, Any, Set, Tuple
 import re
 import yaml
 from jinja2 import Template, UndefinedError, Environment, meta
-from promptweaver.utils.string_utils import remove_blank_spaces
-import pprint
+from promptweaver.utils.string_utils import remove_blank_spaces, add_indent_filters
 
 
 def format_schema(schema, indent=4, level=0):
@@ -60,7 +59,7 @@ class YAMLParser:
             str: The rendered YAML content as a string.
         """
         with open(file_path, 'r') as file:
-            template_str = file.read()
+            template_str = add_indent_filters(file.readlines())
         template = Template(template_str)
         try:
             return template.render(**params)
@@ -131,8 +130,38 @@ class YAMLParser:
 
         Returns:
             Dict[str, Any]: Parsed YAML data.
+
+        Raises:
+            ValueError: If the YAML content cannot be parsed.
         """
-        return yaml.safe_load(rendered_yaml)
+        try:
+            return yaml.safe_load(rendered_yaml)
+        except yaml.YAMLError as e:
+            # Extract error details
+            error_context = ""
+            error_snippet = ""
+            if hasattr(e, 'problem_mark') and e.problem_mark is not None:
+                mark = e.problem_mark
+                error_context = f" at line {mark.line + 1}, column {mark.column + 1}"
+                # Include a snippet of the problematic content
+                error_snippet = YAMLParser._get_error_snippet(rendered_yaml, mark.line)
+            else:
+                error_snippet = YAMLParser._get_error_snippet(rendered_yaml)
+            # Prepare error message
+            error_message = (
+                f"Error parsing PromptWeaver YAML template content{error_context}:\n{e}"
+                "\n\nPossible reasons could be:"
+                "\n- Incorrect YAML syntax (e.g., missing colons, improper indentation)."
+                "\n- Unescaped special characters in your variables."
+                "\n- Invalid characters or formatting."
+                "\n\nSuggestions:"
+                "\n- Check the lines highlighted below for syntax errors."
+                "\n- Ensure that any special characters in your variables are properly escaped or handled."
+                "\n- Use YAML block scalars (|) for multi-line strings."
+                "\n\nProblematic content:"
+                f"\n{error_snippet}"
+            )
+            raise ValueError(error_message) from e
 
     @staticmethod
     def load_config(file_path: str, params: Dict[str, str]) -> Tuple[Dict[str, Any], Dict[str, str]]:
@@ -174,6 +203,31 @@ class YAMLParser:
         sample_config = YAMLParser.get_sample_values(file_path)
         parsed_yaml, merged_params = YAMLParser.load_config(file_path, sample_config)
         return (parsed_yaml, merged_params)
+    
+    @staticmethod
+    def _get_error_snippet(content: str, error_line: int = None, context_lines: int = 3) -> str:
+        """
+        Extracts a snippet of the content around the error line for debugging.
+
+        Args:
+            content (str): The full content as a string.
+            error_line (int, optional): The line number where the error occurred. Defaults to None.
+            context_lines (int): Number of lines to include before and after the error line.
+
+        Returns:
+            str: A snippet of the content around the error line.
+        """
+        lines = content.split('\n')
+        total_lines = len(lines)
+        if error_line is not None:
+            start = max(0, error_line - context_lines)
+            end = min(total_lines, error_line + context_lines + 1)
+        else:
+            # If error_line is not provided, show up to the first 10 lines
+            start = 0
+            end = min(total_lines, 10)
+        snippet = '\n'.join(f"{i+1}: {lines[i]}" for i in range(start, end))
+        return snippet
 
 
 class PromptConfig:
